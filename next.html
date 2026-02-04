@@ -2,225 +2,159 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Our Memories ❤️</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Memories ❤️</title>
 
 <style>
-* { margin: 0; padding: 0; box-sizing: border-box; }
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+  font-family:'Segoe UI',sans-serif;
+  background:linear-gradient(135deg,#ff758c,#ff7eb3);
+  min-height:100vh;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:white;
+  padding:20px;
+}
+.container{
+  max-width:420px;
+  width:100%;
+  text-align:center;
+}
+h2{margin-bottom:15px;}
 
-body {
-  font-family: 'Segoe UI', sans-serif;
-  background: linear-gradient(135deg, #ff758c, #ff7eb3);
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
+.slider-wrapper{
+  position:relative;
+}
+#slide{
+  width:100%;
+  border-radius:18px;
+  box-shadow:0 8px 20px rgba(0,0,0,.25);
+}
+.nav{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  background:rgba(255,255,255,.3);
+  border:none;
+  color:white;
+  font-size:1.8rem;
+  padding:10px 14px;
+  border-radius:50%;
+  cursor:pointer;
+}
+.nav.left{left:-12px;}
+.nav.right{right:-12px;}
+
+.letter-box{
+  background:rgba(255,255,255,.2);
+  border-radius:18px;
+  padding:25px;
+  min-height:160px;
+  margin-top:25px;
+  box-shadow:0 10px 25px rgba(0,0,0,.25);
 }
 
-.container {
-  background: rgba(255,255,255,0.15);
-  backdrop-filter: blur(12px);
-  padding: 30px 25px;
-  border-radius: 25px;
-  box-shadow: 0 15px 35px rgba(0,0,0,0.3);
-  max-width: 420px;
-  width: 100%;
-  text-align: center;
+.heart-frame{
+  width:220px;
+  height:200px;
+  margin:0 auto 20px;
+  clip-path:path(
+    'M110 190 C20 120 0 80 40 40 C70 10 110 30 110 60
+     C110 30 150 10 180 40 C220 80 200 120 110 190 Z'
+  );
+  overflow:hidden;
+  box-shadow:0 12px 30px rgba(0,0,0,.35);
+}
+.heart-frame img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
 }
 
-h1 {
-  font-size: 1.9rem;
-  margin-bottom: 20px;
-}
+.end-text{margin:20px 0;line-height:1.6;}
 
-.slideshow {
-  width: 100%;
-  height: 280px;
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-}
-
-.slideshow img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-#endText {
-  display: none;
-  margin-top: 20px;
-  font-size: 1.1rem;
-  line-height: 1.6;
-}
-
-/* ❤️ Heart-shaped photo frame */
-.heart-frame {
-  width: 220px;
-  height: 200px;
-  margin: 25px auto 0;
-  position: relative;
-  transform: rotate(-45deg);
-}
-
-.heart-frame::before,
-.heart-frame::after {
-  content: "";
-  width: 220px;
-  height: 200px;
-  background: #ff4d6d;
-  border-radius: 50%;
-  position: absolute;
-}
-
-.heart-frame::before {
-  top: -110px;
-  left: 0;
-}
-
-.heart-frame::after {
-  left: 110px;
-  top: 0;
-}
-
-.heart-frame img {
-  position: absolute;
-  width: 200px;
-  height: 180px;
-  object-fit: cover;
-  top: 10px;
-  left: 10px;
-  border-radius: 15px;
-  transform: rotate(45deg);
-  z-index: 2;
-}
-
-/* Replay button */
-button {
-  margin-top: 20px;
-  background: linear-gradient(135deg, #ff4d6d, #ff1e56);
-  border: none;
-  padding: 12px 30px;
-  border-radius: 30px;
-  font-size: 1rem;
-  color: white;
-  cursor: pointer;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
-}
-
-button:hover {
-  transform: scale(1.05);
-}
-
-/* Floating hearts */
-.heart {
-  position: fixed;
-  font-size: 20px;
-  animation: float 6s linear infinite;
-  opacity: 0.7;
-}
-
-@keyframes float {
-  from { transform: translateY(100vh); }
-  to { transform: translateY(-10vh); }
+button{
+  background:linear-gradient(135deg,#ff4d6d,#ff1e56);
+  border:none;
+  padding:12px 28px;
+  border-radius:30px;
+  color:white;
+  cursor:pointer;
+  font-size:1rem;
 }
 </style>
 </head>
 
 <body>
-
 <div class="container">
-  <h1>Some of our beautiful memories ❤️</h1>
 
-  <div class="slideshow">
-    <img id="slide" src="img1.jpeg" alt="memory">
+  <audio id="bgMusic" src="song.mp3" loop></audio>
+
+  <h2>Some of our beautiful memories 💕</h2>
+
+  <div class="slider-wrapper" id="sliderSection">
+    <button class="nav left" onclick="prevImage()">❮</button>
+    <img id="slide" src="img1.jpeg">
+    <button class="nav right" onclick="nextImage()">❯</button>
   </div>
 
-  <p id="endText">
-    you know that i'm just a beginner😗,<br>
-    so thats it for today😘...<br>
-    hope you enjoy ❤️
-  </p>
+  <div id="letterSection" style="display:none;">
+    <div class="letter-box">
+      <!-- write your letter later -->
+    </div>
+    <button onclick="showFinal()">Continue ❤️</button>
+  </div>
 
   <div id="finalSection" style="display:none;">
     <div class="heart-frame">
-      <img src="final.jpeg" alt="Forever Us">
+      <img src="final.jpeg">
     </div>
-    <button onclick="replay()">Replay 💖</button>
+    <p class="end-text">
+      you know that i'm just a beginner 😗,<br>
+      so that's it for today 😘... hope you enjoy
+    </p>
+    <button onclick="replay()">Replay 🔁</button>
   </div>
+
 </div>
 
-<!-- 🎵 Background Music -->
-<audio autoplay loop>
-  <source src="song.mp3" type="audio/mpeg">
-</audio>
-
 <script>
-const images = [
+const images=[
   "img1.jpeg","img2.jpeg","img3.jpeg","img4.jpeg",
   "img5.jpeg","img6.jpeg","img7.jpeg","img8.jpeg",
   "img9.jpeg","img10.jpeg","img11.jpeg","img12.jpeg"
 ];
+let index=0;
+const slide=document.getElementById("slide");
 
-let index = 0;
-const slide = document.getElementById("slide");
-const endText = document.getElementById("endText");
-const finalSection = document.getElementById("finalSection");
-
-let startX = 0;
-
-slide.addEventListener("touchstart", e => {
-  startX = e.touches[0].clientX;
-});
-
-slide.addEventListener("touchend", e => {
-  const endX = e.changedTouches[0].clientX;
-  if (startX - endX > 50) nextImage();
-  if (endX - startX > 50) prevImage();
-});
-
-function nextImage() {
-  if (index < images.length - 1) {
-    index++;
-    slide.src = images[index];
+function nextImage(){
+  if(index===images.length-1){
+    document.getElementById("sliderSection").style.display="none";
+    document.getElementById("letterSection").style.display="block";
+    return;
   }
-  if (index === images.length - 1) {
-    endText.style.display = "block";
-    finalSection.style.display = "block";
-  }
+  index++;
+  slide.src=images[index];
+}
+function prevImage(){
+  if(index>0){index--;slide.src=images[index];}
 }
 
-function prevImage() {
-  if (index > 0) {
-    index--;
-    slide.src = images[index];
-    endText.style.display = "none";
-    finalSection.style.display = "none";
-  }
+function showFinal(){
+  document.getElementById("letterSection").style.display="none";
+  document.getElementById("finalSection").style.display="block";
 }
 
-function replay() {
-  index = 0;
-  slide.src = images[0];
-  endText.style.display = "none";
-  finalSection.style.display = "none";
+function replay(){
+  localStorage.removeItem("playMusic");
+  window.location.href="index.html";
 }
 
-// Floating hearts animation
-setInterval(() => {
-  const heart = document.createElement("div");
-  heart.className = "heart";
-  heart.innerHTML = "❤️";
-  heart.style.left = Math.random() * 100 + "vw";
-  heart.style.fontSize = (Math.random() * 20 + 15) + "px";
-  document.body.appendChild(heart);
-  setTimeout(() => heart.remove(), 6000);
-}, 350);
+if(localStorage.getItem("playMusic")==="yes"){
+  document.getElementById("bgMusic").play().catch(()=>{});
+}
 </script>
-
 </body>
 </html>
-
-
-
