@@ -30,16 +30,15 @@ h2{margin-bottom:15px;}
 #slide{
   width:100%;
   border-radius:18px;
-  box-shadow:0 8px 20px rgba(0,0,0,.25);
 }
 .nav{
   position:absolute;
   top:50%;
   transform:translateY(-50%);
-  background:rgba(255,255,255,.3);
+  background:rgba(255,255,255,0.35);
   border:none;
   color:white;
-  font-size:1.8rem;
+  font-size:2rem;
   padding:10px 14px;
   border-radius:50%;
   cursor:pointer;
@@ -48,12 +47,11 @@ h2{margin-bottom:15px;}
 .nav.right{right:-12px;}
 
 .letter-box{
-  background:rgba(255,255,255,.2);
+  background:rgba(255,255,255,0.2);
   border-radius:18px;
   padding:25px;
   min-height:160px;
   margin-top:25px;
-  box-shadow:0 10px 25px rgba(0,0,0,.25);
 }
 
 .heart-frame{
@@ -65,7 +63,6 @@ h2{margin-bottom:15px;}
      C110 30 150 10 180 40 C220 80 200 120 110 190 Z'
   );
   overflow:hidden;
-  box-shadow:0 12px 30px rgba(0,0,0,.35);
 }
 .heart-frame img{
   width:100%;
@@ -82,7 +79,6 @@ button{
   border-radius:30px;
   color:white;
   cursor:pointer;
-  font-size:1rem;
 }
 </style>
 </head>
@@ -90,33 +86,36 @@ button{
 <body>
 <div class="container">
 
-  <audio id="bgMusic" src="song.mp3" loop></audio>
+<audio id="bgMusic" src="song.mp3" loop></audio>
 
-  <h2>Some of our beautiful memories 💕</h2>
+<h2>Some of our beautiful memories 💕</h2>
 
-  <div class="slider-wrapper" id="sliderSection">
-    <button class="nav left" onclick="prevImage()">❮</button>
-    <img id="slide" src="img1.jpeg">
-    <button class="nav right" onclick="nextImage()">❯</button>
+<!-- SLIDESHOW -->
+<div class="slider-wrapper" id="sliderSection">
+  <button class="nav left" onclick="prevImage()">❮</button>
+  <img id="slide" src="img1.jpeg">
+  <button class="nav right" onclick="nextImage()">❯</button>
+</div>
+
+<!-- LETTER -->
+<div id="letterSection" style="display:none;">
+  <div class="letter-box">
+    <!-- Write your letter here later -->
   </div>
+  <button onclick="showFinal()">Continue ❤️</button>
+</div>
 
-  <div id="letterSection" style="display:none;">
-    <div class="letter-box">
-      <!-- write your letter later -->
-    </div>
-    <button onclick="showFinal()">Continue ❤️</button>
+<!-- FINAL -->
+<div id="finalSection" style="display:none;">
+  <div class="heart-frame">
+    <img src="final.jpeg">
   </div>
-
-  <div id="finalSection" style="display:none;">
-    <div class="heart-frame">
-      <img src="final.jpeg">
-    </div>
-    <p class="end-text">
-      you know that i'm just a beginner 😗,<br>
-      so that's it for today 😘... hope you enjoy
-    </p>
-    <button onclick="replay()">Replay 🔁</button>
-  </div>
+  <p class="end-text">
+    you know that i'm just a beginner 😗,<br>
+    so that's it for today 😘... hope you enjoy
+  </p>
+  <button onclick="replay()">Replay 🔁</button>
+</div>
 
 </div>
 
@@ -139,7 +138,10 @@ function nextImage(){
   slide.src=images[index];
 }
 function prevImage(){
-  if(index>0){index--;slide.src=images[index];}
+  if(index>0){
+    index--;
+    slide.src=images[index];
+  }
 }
 
 function showFinal(){
@@ -152,9 +154,21 @@ function replay(){
   window.location.href="index.html";
 }
 
+/* Continue music */
 if(localStorage.getItem("playMusic")==="yes"){
   document.getElementById("bgMusic").play().catch(()=>{});
 }
+
+/* Swipe support */
+let startX=0;
+slide.addEventListener("touchstart",e=>{
+  startX=e.touches[0].clientX;
+});
+slide.addEventListener("touchend",e=>{
+  let endX=e.changedTouches[0].clientX;
+  if(startX-endX>50) nextImage();
+  if(endX-startX>50) prevImage();
+});
 </script>
 </body>
 </html>
