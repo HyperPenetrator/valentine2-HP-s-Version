@@ -529,15 +529,29 @@
 
     // Autoplay music if coming from intro page
     if (localStorage.getItem("playMusic") === "yes") {
+      // Get saved time
+      const savedTime = localStorage.getItem("musicTime");
+      if (savedTime) {
+        bgMusic.currentTime = parseFloat(savedTime);
+      }
+
       bgMusic.play().catch(err => {
         console.log("Autoplay blocked:", err);
       });
     }
 
+    // Periodically save time so it continues if they refresh or go back
+    setInterval(() => {
+      if (!bgMusic.paused) {
+        localStorage.setItem("musicTime", bgMusic.currentTime);
+      }
+    }, 1000);
+
 
     // Clean up on replay
     function replay() {
       localStorage.removeItem("playMusic");
+      localStorage.removeItem("musicTime");
       bgMusic.pause();
       window.location.href = "index.html";
     }

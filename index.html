@@ -77,6 +77,47 @@
       }
     }
 
+    /* Splash Screen Styles */
+    #splash-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #ffe6eb;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      cursor: pointer;
+      transition: opacity 0.8s ease-out, visibility 0.8s;
+    }
+
+    #splash-screen.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    .splash-heart {
+      font-size: 5rem;
+      color: #ff4d6d;
+      animation: heart-beat 1.5s infinite;
+      margin-bottom: 20px;
+    }
+
+    @keyframes heart-beat {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    .splash-text {
+      font-family: 'Quicksand', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #ff4d6d;
+    }
+
     .container {
       background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(10px);
@@ -87,9 +128,16 @@
       text-align: center;
       box-shadow: 0 20px 50px rgba(255, 183, 197, 0.6), 0 0 0 8px rgba(255, 255, 255, 0.4);
       border: 2px solid #fff;
-      animation: fadeIn 1s ease-out;
       position: relative;
       z-index: 10;
+      opacity: 0; /* Hidden initially */
+      transform: translateY(20px);
+      transition: opacity 1s ease-out, transform 1s ease-out;
+    }
+
+    .container.visible {
+      opacity: 1;
+      transform: translateY(0);
     }
 
     .photo {
@@ -165,7 +213,13 @@
 </head>
 
 <body>
-  <div class="container">
+  <!-- Splash Screen to start music -->
+  <div id="splash-screen" onclick="startApp()">
+    <div class="splash-heart">❤️</div>
+    <div class="splash-text">Tap to Open</div>
+  </div>
+
+  <div class="container" id="mainContainer">
     <img src="couple.jpeg" class="photo">
 
     <div class="text">
@@ -179,18 +233,39 @@
   </div>
 
   <script>
-    function begin() {
-      // Start music - this user click enables autoplay!
-      const music = document.getElementById("bgMusic");
-      music.play().catch(() => { });
+    const music = document.getElementById("bgMusic");
 
-      // Set flag for next page to continue music
+    function startApp() {
+      // Start music
+      music.play().catch(() => {
+        console.log("Autoplay failed even with click");
+      });
+
+      // Hide splash
+      document.getElementById("splash-screen").classList.add("hidden");
+      
+      // Show container
+      setTimeout(() => {
+        document.getElementById("mainContainer").classList.add("visible");
+      }, 300);
+    }
+
+    function begin() {
+      // Save current time before navigating
+      localStorage.setItem("musicTime", music.currentTime);
       localStorage.setItem("playMusic", "yes");
 
       setTimeout(() => {
         window.location.href = "next.html";
       }, 300);
     }
+
+    // Periodically save time just in case
+    setInterval(() => {
+      if (!music.paused) {
+        localStorage.setItem("musicTime", music.currentTime);
+      }
+    }, 1000);
   </script>
 </body>
 
